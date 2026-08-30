@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  name  String
+  email String  @unique
+  password String  @default("password123")
+  scores   Score[] // このユーザーが持つスコア
+}
+model Score {
+  id         Int      @id @default(autoincrement())
+  attempts   Int      // 正解までにかかった回数（少ない方が高得点）
+  userId   Int    // 誰のスコアか（Userのid）
+  user     User   @relation(fields: [userId], references: [id]) // Userテーブルと紐付け！
+}
+

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>数当てゲーム</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 40px; }
+    .hidden { display: none; }
+    #game-section, #ranking-section { background: #f4f4f4; padding: 20px; border-radius: 8px; display: inline-block; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>🎯 1〜100 数当てゲーム</h1>
+
+  <!-- ゲーム画面 -->
+  <div id="game-section">
+    <p>1から100までの数字を当ててください！</p>
+    <input type="number" id="guessInput" min="1" max="100">
+    <button onclick="checkGuess()">予想する！</button>
+    <p id="message" style="font-weight: bold;"></p>
+    <p>現在の回数: <span id="attemptCount">0</span>回</p>
+  </div>
+
+  <!-- クリア画面（最初は非表示） -->
+  <div id="result-section" class="hidden">
+    <h2>🎉 正解！ 🎉</h2>
+    <p>名前を入力してランキングに登録しよう！</p>
+    <input type="text" id="playerName" placeholder="あなたの名前">
+    <button onclick="submitScore()">ランキングに登録</button>
+  </div>
+
+  <!-- ランキング画面 -->
+  <div id="ranking-section">
+    <h2>🏆 ランキング (トップ5) 🏆</h2>
+    <ol id="rankingList"></ol>
+  </div>
+
+  <script>
+    // 1〜100のランダムな数字を作る
+    let targetNumber = Math.floor(Math.random() * 100) + 1;
+    let attempts = 0;
+
+    // 数字を判定する処理
+    function checkGuess() {
+      const guess = parseInt(document.getElementById('guessInput').value);
+      const message = document.getElementById('message');
+      if (isNaN(guess)) return;
+
+      attempts++;
+      document.getElementById('attemptCount').innerText = attempts;
+
+      if (guess === targetNumber) {
+        message.innerText = "おめでとうございます！正解です！";
+        document.getElementById('game-section').style.display = 'none';
+        document.getElementById('result-section').style.display = 'block';
+      } else if (guess > targetNumber) {
+        message.innerText = "もっと小さいです👇";
+      } else {
+        message.innerText = "もっと大きいです👆";
+      }
+    }
+
+    // サーバーにスコアを送信する処理
+    async function submitScore() {
+      const playerName = document.getElementById('playerName').value || "名無し";
+      await fetch('http://localhost:3000/scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ playerName, attempts })
+      });
+      alert('登録しました！');
+      location.reload(); // 画面を更新して最初から
+    }
+
+    // サーバーからランキングを取得して表示する処理
+    async function loadRanking() {
+      const response = await fetch('http://localhost:3000/scores');
+      const scores = await response.json();
+      const list = document.getElementById('rankingList');
+      list.innerHTML = '';
+      scores.forEach(score => {
+        const li = document.createElement('li');
+        li.innerText = `${score.playerName} さん : ${score.attempts}回でクリア`;
+        list.appendChild(li);
+      });
+    }
+
+    // ページを開いたときにランキングを読み込む
+    loadRanking();
+  </script>
+</body>
+</html>
