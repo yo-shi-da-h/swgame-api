@@ -27,7 +27,7 @@ const authenticateToken = (req: any, res: any, next: any) => {
 // スコアAPI
 // ==========================================
 // スコア一覧取得（認証必須・ユーザー情報も一緒に取得）
-app.get('/scores', authenticateToken, async (req, res) => {
+app.get('/scores', async (req, res) => {
   try {
     const scores = await prisma.score.findMany({
       orderBy: { attempts: 'asc' },
