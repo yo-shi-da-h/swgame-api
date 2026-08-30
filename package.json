@@ -11,7 +11,7 @@
   },
    "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "prisma generate"  // ←この行を追加！（前の行の末尾にカンマ , を忘れないようにしてください）
+    "postinstall": "prisma generate"  
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
