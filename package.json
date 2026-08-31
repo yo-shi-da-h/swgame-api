@@ -10,7 +10,7 @@
     "jsonwebtoken": "^9.0.3"
   },
 "scripts": {
-  "build": "npx prisma generate && tsc",
+  "build": "npx prisma generate && npx tsc",
   "start": "node dist/app.js"
 },
   "devDependencies": {
