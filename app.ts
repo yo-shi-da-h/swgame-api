@@ -9,6 +9,7 @@ const PORT = 3000;
 const SECRET_KEY = 'super-secret-key';
 
 app.use(express.json());
+app.use(express.static('public'));
 
 // トークンを確認する関所（ミドルウェア）
 const authenticateToken = (req: any, res: any, next: any) => {
@@ -53,6 +54,12 @@ app.post('/scores', authenticateToken, async (req: any, res: any) => {
   try {
     const newScore = await prisma.score.create({
       data: { attempts: attempts, userId: userId }, // スコアとユーザーIDをセットで保存
+    
+    include: {
+        user: {
+          select: { name: true, email: true }
+        }
+      }
     });
     res.status(201).json(newScore);
   } catch (error) {
