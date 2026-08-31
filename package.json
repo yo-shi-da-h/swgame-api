@@ -13,7 +13,6 @@
   },
   "scripts": {
     "build": "prisma generate && tsc",
-    "postinstall": "prisma generate",
     "start": "node dist/app.js"
   },
   "devDependencies": {
