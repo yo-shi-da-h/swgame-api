@@ -12,7 +12,8 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "build": "npx prisma generate && npx tsc",
+    "build": "prisma generate && tsc",
+    "postinstall": "prisma generate",
     "start": "node dist/app.js"
   },
   "devDependencies": {
