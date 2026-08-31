@@ -13,3 +13,8 @@
     }
   ]
 }
+{
+  "buildCommand": "prisma generate && tsc",
+  "outputDirectory": "dist",
+  "includeFiles": ["node_modules/.prisma/client/**"]
+}
