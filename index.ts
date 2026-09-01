@@ -1,11 +1,21 @@
+import "dotenv/config";
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { PrismaClient, User } from '@prisma/client';
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from 'pg';
+import { createHash, randomBytes } from "crypto";
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_PRISMA_URL!,
+});
+
+const adapter = new PrismaPg(pool);
 
 const app = express();
-const prisma = new PrismaClient();
-const PORT = 3000;
+const prisma = new PrismaClient({adapter});
+const PORT = 3001;
 const SECRET_KEY = 'super-secret-key';
 
 app.use(express.json());
