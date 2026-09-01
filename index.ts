@@ -8,6 +8,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 const connectionString = process.env.POSTGRES_PRISMA_URL || process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("環境変数 POSTGRES_PRISMA_URL が設定されていません。");
+}
 const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 
