@@ -2,15 +2,13 @@ import "dotenv/config";
 import express from 'express';
 import { PrismaClient, User } from '@prisma/client';
 import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from 'pg';
+import pg from 'pg';
 import { createHash, randomBytes } from "crypto";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_PRISMA_URL!,
-});
-
+const connectionString = process.env.POSTGRES_PRISMA_URL || process.env.DATABASE_URL;
+const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 
 const app = express();
